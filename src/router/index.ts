@@ -15,11 +15,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import("../views/Home.vue"),
       },
       {
-        path: "practice-v1",
-        name: "practice-v1",
-        component: () => import("@/views/PracticeFirstRound.vue"),
-      },
-      {
         path: "practice-v2",
         name: "practice-v2",
         component: () => import("@/views/PracticeSecondRound.vue"),

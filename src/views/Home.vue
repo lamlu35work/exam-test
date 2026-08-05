@@ -19,24 +19,10 @@
 
       <div class="mt-10 grid gap-5 sm:grid-cols-2">
         <RouterLink
-          :to="{ name: 'practice-v1' }"
-          class="rounded-2xl bg-blue-600 px-6 py-5 text-lg font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-1 hover:bg-blue-500"
-        >
-          Kiến thức chung
-        </RouterLink>
-
-        <RouterLink
           :to="{ name: 'practice-v2' }"
           class="rounded-2xl bg-blue-600 px-6 py-5 text-lg font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-1 hover:bg-blue-500"
         >
           Chuyên ngành
-        </RouterLink>
-
-        <RouterLink
-          :to="{ name: 'exam' }"
-          class="rounded-2xl bg-emerald-600 px-6 py-5 text-lg font-semibold text-white shadow-lg shadow-emerald-600/20 transition hover:-translate-y-1 hover:bg-emerald-500"
-        >
-          Test Kiến thức chung
         </RouterLink>
 
         <RouterLink
