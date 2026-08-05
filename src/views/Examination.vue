@@ -17,7 +17,6 @@
         </div>
 
         <div class="flex shrink-0 items-center gap-2">
-          <!-- Đồng hồ mobile -->
           <div
             v-if="!isSubmitted"
             class="rounded-lg px-3 py-2 text-sm font-bold tabular-nums"
@@ -37,7 +36,6 @@
             Đã nộp
           </div>
 
-          <!-- Mở danh sách câu hỏi -->
           <button
             type="button"
             class="relative flex h-10 w-10 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-700 transition hover:bg-slate-50"
@@ -81,7 +79,6 @@
           class="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 lg:min-h-[650px] lg:rounded-2xl lg:p-6"
         >
           <template v-if="currentQuestion">
-            <!-- Header câu hỏi -->
             <div
               class="mb-5 flex items-center justify-between gap-3 border-b border-slate-200 pb-4 lg:mb-6"
             >
@@ -95,7 +92,6 @@
                 </p>
               </div>
 
-              <!-- Đồng hồ desktop -->
               <div
                 v-if="!isSubmitted"
                 class="hidden rounded-xl px-4 py-2 text-lg font-bold tabular-nums lg:block"
@@ -108,7 +104,6 @@
                 {{ formattedTime }}
               </div>
 
-              <!-- Trạng thái desktop -->
               <div
                 v-else
                 class="hidden rounded-xl bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 lg:block"
@@ -116,7 +111,6 @@
                 Đã nộp bài
               </div>
 
-              <!-- Nút danh sách mobile -->
               <button
                 type="button"
                 class="inline-flex shrink-0 items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 lg:hidden"
@@ -143,7 +137,6 @@
               </button>
             </div>
 
-            <!-- Component câu hỏi -->
             <div
               class="min-w-0"
               :class="isSubmitted ? 'pointer-events-none select-none' : ''"
@@ -158,7 +151,6 @@
               />
             </div>
 
-            <!-- Điều hướng -->
             <div
               class="mt-6 flex items-center justify-between gap-3 border-t border-slate-200 pt-5 lg:mt-8"
             >
@@ -253,7 +245,6 @@
               </p>
             </div>
 
-            <!-- Kết quả -->
             <div
               v-if="isSubmitted"
               class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4"
@@ -295,7 +286,6 @@
               </div>
             </div>
 
-            <!-- Grid câu hỏi desktop -->
             <div
               v-if="examQuestions.length"
               class="mt-4 grid grid-cols-5 gap-2"
@@ -313,7 +303,6 @@
               </button>
             </div>
 
-            <!-- Chú thích trước khi nộp -->
             <div
               v-if="examQuestions.length && !isSubmitted"
               class="mt-5 space-y-2 border-t border-slate-200 pt-4"
@@ -322,7 +311,6 @@
                 <span
                   class="h-3 w-3 rounded border border-blue-300 bg-blue-50"
                 ></span>
-
                 Đã trả lời
               </div>
 
@@ -330,25 +318,21 @@
                 <span
                   class="h-3 w-3 rounded border border-slate-300 bg-white"
                 ></span>
-
                 Chưa trả lời
               </div>
             </div>
 
-            <!-- Chú thích sau khi nộp -->
             <div
               v-if="isSubmitted"
               class="mt-5 space-y-2 border-t border-slate-200 pt-4"
             >
               <div class="flex items-center gap-2 text-xs text-slate-600">
                 <span class="h-3 w-3 rounded bg-emerald-500"></span>
-
                 Câu trả lời đúng
               </div>
 
               <div class="flex items-center gap-2 text-xs text-slate-600">
                 <span class="h-3 w-3 rounded bg-red-500"></span>
-
                 Câu trả lời sai
               </div>
 
@@ -356,22 +340,19 @@
                 <span
                   class="h-3 w-3 rounded border border-amber-300 bg-amber-50"
                 ></span>
-
                 Câu chưa trả lời
               </div>
             </div>
 
-            <!-- Nộp bài -->
             <button
               v-if="exam && !isSubmitted"
               type="button"
               class="mt-6 w-full rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
-              @click="submitExam(false)"
+              @click="requestSubmitExam"
             >
               Nộp bài
             </button>
 
-            <!-- Làm đề mới -->
             <button
               v-else-if="isSubmitted"
               type="button"
@@ -385,7 +366,7 @@
       </div>
     </div>
 
-    <!-- Overlay mobile -->
+    <!-- Overlay sidebar mobile -->
     <Transition
       enter-active-class="transition-opacity duration-300"
       enter-from-class="opacity-0"
@@ -416,7 +397,6 @@
         v-if="isQuestionSidebarOpen"
         class="fixed inset-y-0 right-0 z-50 flex w-[90%] max-w-[400px] flex-col bg-slate-100 shadow-2xl lg:hidden"
       >
-        <!-- Header sidebar -->
         <div
           class="flex shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 py-4"
         >
@@ -449,12 +429,10 @@
           </button>
         </div>
 
-        <!-- Nội dung sidebar -->
         <div class="flex-1 overflow-y-auto overscroll-contain p-3">
           <div
             class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
           >
-            <!-- Kết quả mobile -->
             <div
               v-if="isSubmitted"
               class="rounded-xl border border-slate-200 bg-slate-50 p-4"
@@ -474,7 +452,6 @@
                   <p class="text-lg font-bold text-emerald-700">
                     {{ correctAnswerCount }}
                   </p>
-
                   <p class="mt-1 text-[11px] text-emerald-600">Đúng</p>
                 </div>
 
@@ -482,7 +459,6 @@
                   <p class="text-lg font-bold text-red-700">
                     {{ incorrectAnswerCount }}
                   </p>
-
                   <p class="mt-1 text-[11px] text-red-600">Sai</p>
                 </div>
 
@@ -490,13 +466,11 @@
                   <p class="text-lg font-bold text-amber-700">
                     {{ unansweredCount }}
                   </p>
-
                   <p class="mt-1 text-[11px] text-amber-600">Chưa làm</p>
                 </div>
               </div>
             </div>
 
-            <!-- Grid câu hỏi mobile -->
             <div
               v-if="examQuestions.length"
               class="grid grid-cols-5 gap-2"
@@ -515,7 +489,6 @@
               </button>
             </div>
 
-            <!-- Chú thích mobile trước khi nộp -->
             <div
               v-if="examQuestions.length && !isSubmitted"
               class="mt-5 space-y-2 border-t border-slate-200 pt-4"
@@ -524,7 +497,6 @@
                 <span
                   class="h-3 w-3 rounded border border-blue-300 bg-blue-50"
                 ></span>
-
                 Đã trả lời
               </div>
 
@@ -532,25 +504,21 @@
                 <span
                   class="h-3 w-3 rounded border border-slate-300 bg-white"
                 ></span>
-
                 Chưa trả lời
               </div>
             </div>
 
-            <!-- Chú thích mobile sau khi nộp -->
             <div
               v-if="isSubmitted"
               class="mt-5 space-y-2 border-t border-slate-200 pt-4"
             >
               <div class="flex items-center gap-2 text-xs text-slate-600">
                 <span class="h-3 w-3 rounded bg-emerald-500"></span>
-
                 Câu trả lời đúng
               </div>
 
               <div class="flex items-center gap-2 text-xs text-slate-600">
                 <span class="h-3 w-3 rounded bg-red-500"></span>
-
                 Câu trả lời sai
               </div>
 
@@ -558,22 +526,19 @@
                 <span
                   class="h-3 w-3 rounded border border-amber-300 bg-amber-50"
                 ></span>
-
                 Câu chưa trả lời
               </div>
             </div>
 
-            <!-- Nộp bài mobile -->
             <button
               v-if="exam && !isSubmitted"
               type="button"
               class="mt-6 w-full rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
-              @click="submitExam(false)"
+              @click="requestSubmitExam"
             >
               Nộp bài
             </button>
 
-            <!-- Làm đề mới mobile -->
             <button
               v-else-if="isSubmitted"
               type="button"
@@ -585,6 +550,143 @@
           </div>
         </div>
       </aside>
+    </Transition>
+
+    <!-- Custom dialog -->
+    <Transition
+      enter-active-class="transition-opacity duration-200"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-150"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="dialog.isOpen"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-[1px]"
+        role="presentation"
+        @click.self="handleDialogCancel"
+      >
+        <div
+          class="w-full max-w-sm overflow-hidden rounded-2xl bg-white shadow-2xl"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="exam-dialog-title"
+          aria-describedby="exam-dialog-description"
+        >
+          <div class="p-5 sm:p-6">
+            <div class="flex items-start gap-4">
+              <div
+                class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
+                :class="dialogIconContainerClass"
+              >
+                <svg
+                  v-if="dialog.variant === 'warning'"
+                  class="h-6 w-6"
+                  :class="dialogIconClass"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"
+                  />
+                  <path d="M12 9v4" />
+                  <path d="M12 17h.01" />
+                </svg>
+
+                <svg
+                  v-else-if="dialog.variant === 'error'"
+                  class="h-6 w-6"
+                  :class="dialogIconClass"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m15 9-6 6" />
+                  <path d="m9 9 6 6" />
+                </svg>
+
+                <svg
+                  v-else-if="dialog.variant === 'success'"
+                  class="h-6 w-6"
+                  :class="dialogIconClass"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m9 12 2 2 4-4" />
+                </svg>
+
+                <svg
+                  v-else
+                  class="h-6 w-6"
+                  :class="dialogIconClass"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4" />
+                  <path d="M12 8h.01" />
+                </svg>
+              </div>
+
+              <div class="min-w-0 flex-1">
+                <h3
+                  id="exam-dialog-title"
+                  class="text-base font-semibold text-slate-900"
+                >
+                  {{ dialog.title }}
+                </h3>
+
+                <p
+                  id="exam-dialog-description"
+                  class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600"
+                >
+                  {{ dialog.message }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="flex flex-col-reverse gap-2 border-t border-slate-200 bg-slate-50 px-5 py-4 sm:flex-row sm:justify-end"
+          >
+            <button
+              v-if="dialog.showCancel"
+              type="button"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 sm:w-auto"
+              @click="handleDialogCancel"
+            >
+              {{ dialog.cancelText }}
+            </button>
+
+            <button
+              type="button"
+              class="w-full rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition sm:w-auto"
+              :class="dialogConfirmButtonClass"
+              @click="handleDialogConfirm"
+            >
+              {{ dialog.confirmText }}
+            </button>
+          </div>
+        </div>
+      </div>
     </Transition>
   </div>
 </template>
@@ -605,6 +707,20 @@ import type { UserAnswer } from "@/pkg/interfaces/userAnswer";
 
 import QuestionRenderer from "@/components/practice/QuestionRenderer.vue";
 
+type DialogVariant = "info" | "warning" | "error" | "success";
+
+interface DialogState {
+  isOpen: boolean;
+  title: string;
+  message: string;
+  variant: DialogVariant;
+  confirmText: string;
+  cancelText: string;
+  showCancel: boolean;
+  onConfirm: (() => void) | null;
+  onCancel: (() => void) | null;
+}
+
 const EXAM_DURATION_SECONDS = 60 * 60;
 
 const allQuestions = dataQuestions as QuestionInterface[];
@@ -616,25 +732,28 @@ const remainingSeconds = ref(EXAM_DURATION_SECONDS);
 
 const isQuestionSidebarOpen = ref(false);
 
+const dialog = ref<DialogState>({
+  isOpen: false,
+  title: "",
+  message: "",
+  variant: "info",
+  confirmText: "Đồng ý",
+  cancelText: "Hủy",
+  showCancel: false,
+  onConfirm: null,
+  onCancel: null,
+});
+
 let timerId: number | null = null;
 
-/**
- * Danh sách câu hỏi trong đề.
- */
 const examQuestions = computed<QuestionInterface[]>(() => {
   return exam.value?.questions ?? [];
 });
 
-/**
- * Đã nộp bài hay chưa.
- */
 const isSubmitted = computed(() => {
   return exam.value?.submittedAt != null;
 });
 
-/**
- * Câu hỏi hiện tại.
- */
 const currentQuestion = computed<QuestionInterface | null>(() => {
   if (!currentQuestionId.value) {
     return null;
@@ -647,9 +766,6 @@ const currentQuestion = computed<QuestionInterface | null>(() => {
   );
 });
 
-/**
- * Vị trí câu hỏi hiện tại.
- */
 const currentQuestionIndex = computed(() => {
   if (!currentQuestionId.value) {
     return -1;
@@ -660,9 +776,6 @@ const currentQuestionIndex = computed(() => {
   );
 });
 
-/**
- * Câu trả lời của câu hiện tại.
- */
 const currentUserAnswer = computed<UserAnswer | null>(() => {
   if (!currentQuestion.value) {
     return null;
@@ -671,16 +784,10 @@ const currentUserAnswer = computed<UserAnswer | null>(() => {
   return answers.value[currentQuestion.value.id] ?? null;
 });
 
-/**
- * Chuẩn hóa đáp án điền từ.
- */
 const normalizeAnswer = (value: string): string => {
   return value.trim().toLocaleLowerCase("vi-VN").replace(/\s+/g, " ");
 };
 
-/**
- * Kiểm tra câu hỏi đã trả lời đầy đủ hay chưa.
- */
 const isQuestionAnswered = (question: QuestionInterface): boolean => {
   const answer = answers.value[question.id];
 
@@ -720,9 +827,6 @@ const isQuestionAnswered = (question: QuestionInterface): boolean => {
   }
 };
 
-/**
- * Chấm đúng/sai một câu hỏi.
- */
 const isQuestionCorrect = (question: QuestionInterface): boolean => {
   const answer = answers.value[question.id];
 
@@ -773,17 +877,11 @@ const isQuestionCorrect = (question: QuestionInterface): boolean => {
   }
 };
 
-/**
- * Số câu đã trả lời.
- */
 const answeredCount = computed(() => {
   return examQuestions.value.filter((question) => isQuestionAnswered(question))
     .length;
 });
 
-/**
- * Số câu đúng.
- */
 const correctAnswerCount = computed(() => {
   if (!isSubmitted.value) {
     return 0;
@@ -793,9 +891,6 @@ const correctAnswerCount = computed(() => {
     .length;
 });
 
-/**
- * Số câu sai, không tính câu chưa trả lời.
- */
 const incorrectAnswerCount = computed(() => {
   if (!isSubmitted.value) {
     return 0;
@@ -806,17 +901,11 @@ const incorrectAnswerCount = computed(() => {
   ).length;
 });
 
-/**
- * Số câu chưa trả lời.
- */
 const unansweredCount = computed(() => {
   return examQuestions.value.filter((question) => !isQuestionAnswered(question))
     .length;
 });
 
-/**
- * Định dạng thời gian MM:SS.
- */
 const formattedTime = computed(() => {
   const minutes = Math.floor(remainingSeconds.value / 60);
   const seconds = remainingSeconds.value % 60;
@@ -827,62 +916,134 @@ const formattedTime = computed(() => {
   )}`;
 });
 
-/**
- * Mở sidebar mobile.
- */
+const dialogIconContainerClass = computed(() => {
+  switch (dialog.value.variant) {
+    case "warning":
+      return "bg-amber-100";
+
+    case "error":
+      return "bg-red-100";
+
+    case "success":
+      return "bg-emerald-100";
+
+    default:
+      return "bg-blue-100";
+  }
+});
+
+const dialogIconClass = computed(() => {
+  switch (dialog.value.variant) {
+    case "warning":
+      return "text-amber-600";
+
+    case "error":
+      return "text-red-600";
+
+    case "success":
+      return "text-emerald-600";
+
+    default:
+      return "text-blue-600";
+  }
+});
+
+const dialogConfirmButtonClass = computed(() => {
+  switch (dialog.value.variant) {
+    case "warning":
+    case "error":
+      return "bg-red-600 hover:bg-red-700";
+
+    case "success":
+      return "bg-emerald-600 hover:bg-emerald-700";
+
+    default:
+      return "bg-blue-600 hover:bg-blue-700";
+  }
+});
+
+const closeDialog = () => {
+  dialog.value.isOpen = false;
+  dialog.value.onConfirm = null;
+  dialog.value.onCancel = null;
+};
+
+const showAlert = ({
+  title,
+  message,
+  variant = "info",
+  confirmText = "Đồng ý",
+  onConfirm = null,
+}: {
+  title: string;
+  message: string;
+  variant?: DialogVariant;
+  confirmText?: string;
+  onConfirm?: (() => void) | null;
+}) => {
+  dialog.value = {
+    isOpen: true,
+    title,
+    message,
+    variant,
+    confirmText,
+    cancelText: "Hủy",
+    showCancel: false,
+    onConfirm,
+    onCancel: null,
+  };
+};
+
+const showConfirm = ({
+  title,
+  message,
+  variant = "warning",
+  confirmText = "Xác nhận",
+  cancelText = "Hủy",
+  onConfirm,
+}: {
+  title: string;
+  message: string;
+  variant?: DialogVariant;
+  confirmText?: string;
+  cancelText?: string;
+  onConfirm: () => void;
+}) => {
+  dialog.value = {
+    isOpen: true,
+    title,
+    message,
+    variant,
+    confirmText,
+    cancelText,
+    showCancel: true,
+    onConfirm,
+    onCancel: null,
+  };
+};
+
+const handleDialogConfirm = () => {
+  const callback = dialog.value.onConfirm;
+
+  closeDialog();
+  callback?.();
+};
+
+const handleDialogCancel = () => {
+  const callback = dialog.value.onCancel;
+
+  closeDialog();
+  callback?.();
+};
+
 const openQuestionSidebar = () => {
   isQuestionSidebarOpen.value = true;
 };
 
-/**
- * Đóng sidebar mobile.
- */
 const closeQuestionSidebar = () => {
   isQuestionSidebarOpen.value = false;
 };
 
-/**
- * Xóa toàn bộ bài thi hiện tại.
- *
- * Vì không sử dụng localStorage, bài thi chỉ tồn tại trong bộ nhớ
- * của component hiện tại.
- */
-const clearCurrentExam = () => {
-  stopTimer();
-  closeQuestionSidebar();
-
-  exam.value = null;
-  answers.value = {};
-  currentQuestionId.value = null;
-  remainingSeconds.value = EXAM_DURATION_SECONDS;
-};
-
-/**
- * Đóng sidebar bằng phím Escape.
- */
-const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === "Escape") {
-    closeQuestionSidebar();
-  }
-};
-
-/**
- * Khóa cuộn trang khi sidebar đang mở.
- */
-watch(isQuestionSidebarOpen, (isOpen) => {
-  document.body.style.overflow = isOpen ? "hidden" : "";
-});
-
-/**
- * Tạo ID bài thi.
- */
-const createExamId = (): string => {
-  return `exam-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-};
-
-/**
- * Dừng đồng hồ.
- */
 const stopTimer = () => {
   if (timerId === null) {
     return;
@@ -892,9 +1053,89 @@ const stopTimer = () => {
   timerId = null;
 };
 
-/**
- * Cập nhật thời gian còn lại ngay lập tức.
- */
+const clearCurrentExam = () => {
+  stopTimer();
+  closeQuestionSidebar();
+  closeDialog();
+
+  exam.value = null;
+  answers.value = {};
+  currentQuestionId.value = null;
+  remainingSeconds.value = EXAM_DURATION_SECONDS;
+};
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key !== "Escape") {
+    return;
+  }
+
+  if (dialog.value.isOpen) {
+    handleDialogCancel();
+    return;
+  }
+
+  closeQuestionSidebar();
+};
+
+watch(
+  [isQuestionSidebarOpen, () => dialog.value.isOpen],
+  ([isSidebarOpen, isDialogOpen]) => {
+    document.body.style.overflow =
+      isSidebarOpen || isDialogOpen ? "hidden" : "";
+  },
+);
+
+const createExamId = (): string => {
+  return `exam-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+};
+
+const completeSubmitExam = (isAutoSubmit: boolean) => {
+  if (!exam.value || isSubmitted.value) {
+    return;
+  }
+
+  exam.value = {
+    ...exam.value,
+    submittedAt: Date.now(),
+  };
+
+  remainingSeconds.value = 0;
+
+  stopTimer();
+  closeQuestionSidebar();
+
+  if (isAutoSubmit) {
+    showAlert({
+      title: "Đã hết thời gian",
+      message: "Bài thi đã được tự động nộp.",
+      variant: "warning",
+      confirmText: "Xem kết quả",
+    });
+  }
+};
+
+const requestSubmitExam = () => {
+  if (!exam.value || isSubmitted.value) {
+    return;
+  }
+
+  closeQuestionSidebar();
+
+  const message =
+    unansweredCount.value > 0
+      ? `Bạn còn ${unansweredCount.value} câu chưa làm.\n\nBạn có chắc muốn nộp bài không?`
+      : "Bạn đã hoàn thành tất cả câu hỏi.\n\nBạn có chắc muốn nộp bài không?";
+
+  showConfirm({
+    title: "Xác nhận nộp bài",
+    message,
+    variant: "warning",
+    confirmText: "Nộp bài",
+    cancelText: "Tiếp tục làm",
+    onConfirm: () => completeSubmitExam(false),
+  });
+};
+
 const updateRemainingTime = () => {
   if (!exam.value || isSubmitted.value) {
     return;
@@ -908,13 +1149,10 @@ const updateRemainingTime = () => {
   remainingSeconds.value = secondsLeft;
 
   if (secondsLeft <= 0) {
-    submitExam(true);
+    completeSubmitExam(true);
   }
 };
 
-/**
- * Khởi động đồng hồ.
- */
 const startTimer = () => {
   stopTimer();
   updateRemainingTime();
@@ -929,9 +1167,6 @@ const startTimer = () => {
   }, 1000);
 };
 
-/**
- * Bắt đầu đề thi mới.
- */
 const startNewExam = () => {
   const topics = dataTopics as TopicInterface[];
   const topicIds = topics.map((topic) => topic.id);
@@ -940,7 +1175,6 @@ const startNewExam = () => {
     clearCurrentExam();
 
     const questions = generateExamQuestions(allQuestions, topicIds);
-
     const startedAt = Date.now();
 
     exam.value = {
@@ -959,30 +1193,32 @@ const startNewExam = () => {
   } catch (error) {
     console.error(error);
 
-    window.alert(
-      error instanceof Error ? error.message : "Không thể tạo đề thi.",
-    );
+    showAlert({
+      title: "Không thể tạo đề thi",
+      message:
+        error instanceof Error
+          ? error.message
+          : "Đã xảy ra lỗi không xác định.",
+      variant: "error",
+      confirmText: "Đóng",
+    });
   }
 };
 
-/**
- * Xác nhận tạo đề mới.
- */
 const confirmStartNewExam = () => {
-  const shouldStart = window.confirm(
-    "Bạn có chắc muốn tạo một đề thi mới không? Kết quả đề hiện tại sẽ bị xóa.",
-  );
+  closeQuestionSidebar();
 
-  if (!shouldStart) {
-    return;
-  }
-
-  startNewExam();
+  showConfirm({
+    title: "Tạo đề thi mới",
+    message:
+      "Kết quả và đáp án của đề hiện tại sẽ bị xóa.\n\nBạn có chắc muốn tiếp tục không?",
+    variant: "warning",
+    confirmText: "Tạo đề mới",
+    cancelText: "Hủy",
+    onConfirm: startNewExam,
+  });
 };
 
-/**
- * Nhận đáp án từ QuestionRenderer.
- */
 const handleAnswer = (answer: UserAnswer) => {
   if (isSubmitted.value) {
     return;
@@ -994,9 +1230,6 @@ const handleAnswer = (answer: UserAnswer) => {
   };
 };
 
-/**
- * Chọn câu hỏi.
- */
 const selectQuestion = (questionId: string) => {
   const questionExists = examQuestions.value.some(
     (question) => question.id === questionId,
@@ -1009,9 +1242,6 @@ const selectQuestion = (questionId: string) => {
   currentQuestionId.value = questionId;
 };
 
-/**
- * Chọn câu hỏi từ sidebar mobile.
- */
 const selectQuestionFromSidebar = (questionId: string) => {
   selectQuestion(questionId);
   closeQuestionSidebar();
@@ -1022,35 +1252,22 @@ const selectQuestionFromSidebar = (questionId: string) => {
   });
 };
 
-/**
- * Chuyển sang câu trước.
- */
 const selectPreviousQuestion = () => {
   const previousQuestion = examQuestions.value[currentQuestionIndex.value - 1];
 
-  if (!previousQuestion) {
-    return;
+  if (previousQuestion) {
+    selectQuestion(previousQuestion.id);
   }
-
-  selectQuestion(previousQuestion.id);
 };
 
-/**
- * Chuyển sang câu tiếp theo.
- */
 const selectNextQuestion = () => {
   const nextQuestion = examQuestions.value[currentQuestionIndex.value + 1];
 
-  if (!nextQuestion) {
-    return;
+  if (nextQuestion) {
+    selectQuestion(nextQuestion.id);
   }
-
-  selectQuestion(nextQuestion.id);
 };
 
-/**
- * Class của nút số câu.
- */
 const getQuestionButtonClass = (question: QuestionInterface): string => {
   const isCurrent = currentQuestionId.value === question.id;
 
@@ -1079,9 +1296,6 @@ const getQuestionButtonClass = (question: QuestionInterface): string => {
   return statusClass;
 };
 
-/**
- * Tooltip của nút số câu.
- */
 const getQuestionButtonTitle = (
   question: QuestionInterface,
   index: number,
@@ -1101,43 +1315,6 @@ const getQuestionButtonTitle = (
     : `Câu ${index + 1}: Trả lời sai`;
 };
 
-/**
- * Nộp bài.
- */
-const submitExam = (isAutoSubmit: boolean) => {
-  if (!exam.value || isSubmitted.value) {
-    return;
-  }
-
-  if (!isAutoSubmit) {
-    const message =
-      unansweredCount.value > 0
-        ? `Bạn còn ${unansweredCount.value} câu chưa làm. Bạn có chắc muốn nộp bài không?`
-        : "Bạn có chắc muốn nộp bài không?";
-
-    if (!window.confirm(message)) {
-      return;
-    }
-  }
-
-  exam.value = {
-    ...exam.value,
-    submittedAt: Date.now(),
-  };
-
-  remainingSeconds.value = 0;
-
-  stopTimer();
-  closeQuestionSidebar();
-
-  if (isAutoSubmit) {
-    window.alert("Đã hết thời gian. Bài thi được tự động nộp.");
-  }
-};
-
-/**
- * Khi quay lại tab, cập nhật lại đồng hồ dựa trên expiresAt.
- */
 const handleVisibilityChange = () => {
   if (document.visibilityState === "visible") {
     updateRemainingTime();
@@ -1153,12 +1330,7 @@ onBeforeUnmount(() => {
   window.removeEventListener("keydown", handleKeydown);
   document.removeEventListener("visibilitychange", handleVisibilityChange);
 
-  document.body.style.overflow = "";
-
-  /**
-   * Khi chuyển khỏi route chứa component này,
-   * toàn bộ bài thi và đáp án sẽ bị xóa.
-   */
   clearCurrentExam();
+  document.body.style.overflow = "";
 });
 </script>
