@@ -22,14 +22,14 @@
           :to="{ name: 'practice-v2' }"
           class="rounded-2xl bg-blue-600 px-6 py-5 text-lg font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-1 hover:bg-blue-500"
         >
-          Chuyên ngành
+          Luyện tập theo chủ đề
         </RouterLink>
 
         <RouterLink
           :to="{ name: 'exam' }"
           class="rounded-2xl bg-emerald-600 px-6 py-5 text-lg font-semibold text-white shadow-lg shadow-emerald-600/20 transition hover:-translate-y-1 hover:bg-emerald-500"
         >
-          Test chuyên ngành
+          Thi thử
         </RouterLink>
       </div>
     </section>
