@@ -16,7 +16,9 @@
     v-else-if="question.type === QuestionType.TRUE_FALSE"
     :question="question"
     :initial-answer="
-      initialAnswer?.type === QuestionType.TRUE_FALSE ? initialAnswer : null
+      initialAnswer?.type === QuestionType.TRUE_FALSE
+        ? initialAnswer
+        : null
     "
     :exam-mode="examMode"
     :review-mode="reviewMode"
@@ -27,7 +29,22 @@
     v-else-if="question.type === QuestionType.FILL_IN_BLANK"
     :question="question"
     :initial-answer="
-      initialAnswer?.type === QuestionType.FILL_IN_BLANK ? initialAnswer : null
+      initialAnswer?.type === QuestionType.FILL_IN_BLANK
+        ? initialAnswer
+        : null
+    "
+    :exam-mode="examMode"
+    :review-mode="reviewMode"
+    @answer="handleAnswer"
+  />
+
+  <SituationQuestion
+    v-else-if="question.type === QuestionType.SITUATION"
+    :question="question"
+    :initial-answer="
+      initialAnswer?.type === QuestionType.SITUATION
+        ? initialAnswer
+        : null
     "
     :exam-mode="examMode"
     :review-mode="reviewMode"
@@ -43,6 +60,7 @@ import type { UserAnswer } from "@/pkg/interfaces/userAnswer";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion.vue";
 import TrueFalseQuestion from "./TrueFalseQuestion.vue";
 import FillInBlankQuestion from "./FillInBlankQuestion.vue";
+import SituationQuestion from "./SituationQuestion.vue";
 
 withDefaults(
   defineProps<{

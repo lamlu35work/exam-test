@@ -1,17 +1,83 @@
 import { QuestionType } from "@/pkg/enums/questionType";
 
 import type {
-  MultipleChoiceQuestionInterface,
   QuestionInterface,
-  TrueFalseQuestionInterface,
+  MultipleChoiceQuestionInterface,
+  FillInBlankQuestionInterface,
+  SituationQuestionInterface,
 } from "@/pkg/interfaces/question";
 
-const MULTIPLE_CHOICE_COUNT = 40;
-const TRUE_FALSE_COUNT = 10;
-const FILL_IN_BLANK_COUNT = 10;
+/**
+ * ========================================
+ * EXAM CONFIG
+ * ========================================
+ *
+ * Cấu trúc đề:
+ *
+ * 48 câu Multiple Choice
+ *
+ * 2 Situation
+ * - mỗi Situation có 3 câu trắc nghiệm con
+ * - tổng = 6 câu
+ *
+ * 6 câu Fill In Blank
+ *
+ * Tổng câu được chấm:
+ *
+ * 48 + 6 + 6 = 60
+ *
+ * Tổng object trong examQuestions:
+ *
+ * 48 + 2 + 6 = 56
+ */
 
-const shuffleArray = <T>(items: T[]): T[] => {
-  const result = [...items];
+export const EXAM_MULTIPLE_CHOICE_COUNT = 48;
+
+export const EXAM_SITUATION_COUNT = 2;
+
+export const EXAM_FILL_IN_BLANK_COUNT = 6;
+
+/**
+ * Mỗi situation chuẩn của đề
+ * phải có 3 câu hỏi con.
+ */
+export const SITUATION_SUB_QUESTION_COUNT = 3;
+
+/**
+ * Tổng số câu thực tế được chấm.
+ */
+export const EXAM_TOTAL_QUESTION_COUNT =
+  EXAM_MULTIPLE_CHOICE_COUNT +
+  EXAM_SITUATION_COUNT * SITUATION_SUB_QUESTION_COUNT +
+  EXAM_FILL_IN_BLANK_COUNT;
+
+/**
+ * Tổng số block được hiển thị.
+ *
+ * 48 MCQ
+ * +
+ * 2 Situation
+ * +
+ * 6 Fill In Blank
+ *
+ * = 56
+ */
+export const EXAM_TOTAL_BLOCK_COUNT =
+  EXAM_MULTIPLE_CHOICE_COUNT + EXAM_SITUATION_COUNT + EXAM_FILL_IN_BLANK_COUNT;
+
+/**
+ * ========================================
+ * SHUFFLE
+ * ========================================
+ */
+
+/**
+ * Fisher-Yates shuffle.
+ *
+ * Không thay đổi mảng gốc.
+ */
+export const shuffleArray = <T>(source: readonly T[]): T[] => {
+  const result = [...source];
 
   for (let index = result.length - 1; index > 0; index--) {
     const randomIndex = Math.floor(Math.random() * (index + 1));
@@ -23,158 +89,332 @@ const shuffleArray = <T>(items: T[]): T[] => {
 };
 
 /**
- * Trộn options của câu multiple choice.
+ * ========================================
+ * TYPE GUARDS
+ * ========================================
  */
-const shuffleMultipleChoiceOptions = (
-  question: MultipleChoiceQuestionInterface,
-): MultipleChoiceQuestionInterface => {
-  return {
-    ...question,
-    items: shuffleArray(question.items),
-  };
+
+const isMultipleChoiceQuestion = (
+  question: QuestionInterface,
+): question is MultipleChoiceQuestionInterface => {
+  return question.type === QuestionType.MULTIPLE_CHOICE;
+};
+
+const isFillInBlankQuestion = (
+  question: QuestionInterface,
+): question is FillInBlankQuestionInterface => {
+  return question.type === QuestionType.FILL_IN_BLANK;
+};
+
+const isSituationQuestion = (
+  question: QuestionInterface,
+): question is SituationQuestionInterface => {
+  return question.type === QuestionType.SITUATION;
 };
 
 /**
- * Trộn các mệnh đề của câu true/false.
+ * ========================================
+ * SITUATION VALIDATION
+ * ========================================
  */
-const shuffleTrueFalseItems = (
-  question: TrueFalseQuestionInterface,
-): TrueFalseQuestionInterface => {
-  return {
-    ...question,
-    items: shuffleArray(question.items),
-  };
-};
 
 /**
- * Phân bổ số câu tương đối đều cho các topic.
+ * Chỉ lấy Situation hợp lệ.
  *
- * Ví dụ:
- * count = 10, có 3 topic
- * Kết quả phân bổ: 4, 3, 3
+ * Một Situation trong đề hiện tại
+ * bắt buộc phải có đúng 3 câu con.
  */
-const distributeCountByTopic = (
-  totalCount: number,
-  topicIds: number[],
-): Map<number, number> => {
-  const result = new Map<number, number>();
-
-  if (!topicIds.length) {
-    return result;
+const isValidSituationQuestion = (
+  question: SituationQuestionInterface,
+): boolean => {
+  if (!Array.isArray(question.questions)) {
+    return false;
   }
 
-  const baseCount = Math.floor(totalCount / topicIds.length);
-  const remainder = totalCount % topicIds.length;
-
-  topicIds.forEach((topicId, index) => {
-    result.set(topicId, baseCount + (index < remainder ? 1 : 0));
-  });
-
-  return result;
-};
-
-/**
- * Lấy câu hỏi theo type và chia đều theo topic.
- *
- * Nếu topic nào thiếu câu, số lượng thiếu sẽ được lấy ngẫu nhiên
- * từ các topic còn lại.
- */
-const selectQuestionsByType = (
-  allQuestions: QuestionInterface[],
-  type: QuestionInterface["type"],
-  requiredCount: number,
-  topicIds: number[],
-): QuestionInterface[] => {
-  const questionsOfType = allQuestions.filter(
-    (question) => question.type === type,
-  );
-
-  if (questionsOfType.length < requiredCount) {
-    throw new Error(
-      `Không đủ câu hỏi loại "${type}". Cần ${requiredCount}, hiện có ${questionsOfType.length}.`,
-    );
+  if (question.questions.length !== SITUATION_SUB_QUESTION_COUNT) {
+    return false;
   }
-
-  const allocation = distributeCountByTopic(
-    requiredCount,
-    shuffleArray(topicIds),
-  );
-
-  const selectedQuestions: QuestionInterface[] = [];
-  const selectedQuestionIds = new Set<string>();
-
-  topicIds.forEach((topicId) => {
-    const topicQuestions = shuffleArray(
-      questionsOfType.filter((question) => question.topicId === topicId),
-    );
-
-    const requestedCount = allocation.get(topicId) ?? 0;
-
-    topicQuestions.slice(0, requestedCount).forEach((question) => {
-      selectedQuestions.push(question);
-      selectedQuestionIds.add(question.id);
-    });
-  });
 
   /**
-   * Một số topic có thể không đủ câu.
-   * Bù phần còn thiếu từ toàn bộ kho câu hỏi còn lại.
+   * Mỗi câu con phải:
+   *
+   * - có id
+   * - có content
+   * - có items
+   * - có đúng 4 đáp án
+   * - có chính xác 1 đáp án đúng
    */
-  const missingCount = requiredCount - selectedQuestions.length;
+  return question.questions.every((subQuestion) => {
+    if (!subQuestion.id || !subQuestion.content) {
+      return false;
+    }
 
-  if (missingCount > 0) {
-    const remainingQuestions = shuffleArray(
-      questionsOfType.filter(
-        (question) => !selectedQuestionIds.has(question.id),
-      ),
-    );
+    if (!Array.isArray(subQuestion.items)) {
+      return false;
+    }
 
-    selectedQuestions.push(...remainingQuestions.slice(0, missingCount));
-  }
+    if (subQuestion.items.length !== 4) {
+      return false;
+    }
 
-  if (selectedQuestions.length < requiredCount) {
-    throw new Error(`Không thể tạo đủ ${requiredCount} câu loại "${type}".`);
-  }
+    const correctAnswerCount = subQuestion.items.filter(
+      (item) => item.isCorrect === true,
+    ).length;
 
-  return selectedQuestions;
+    return correctAnswerCount === 1;
+  });
 };
+
+/**
+ * ========================================
+ * QUESTION COUNT
+ * ========================================
+ */
+
+/**
+ * Số câu được chấm của một block.
+ *
+ * MCQ:
+ * 1
+ *
+ * Fill in blank:
+ * 1
+ *
+ * Situation:
+ * số câu con
+ *
+ * Ví dụ:
+ *
+ * Situation có 3 sub questions
+ * -> 3 câu được chấm.
+ */
+export const getQuestionScoreCount = (question: QuestionInterface): number => {
+  if (question.type === QuestionType.SITUATION) {
+    return question.questions.length;
+  }
+
+  return 1;
+};
+
+/**
+ * Tính tổng số câu thực tế
+ * trong một đề đã generate.
+ */
+export const getTotalExamQuestionCount = (
+  questions: QuestionInterface[],
+): number => {
+  return questions.reduce((total, question) => {
+    return total + getQuestionScoreCount(question);
+  }, 0);
+};
+
+/**
+ * ========================================
+ * GENERATE EXAM
+ * ========================================
+ */
 
 export const generateExamQuestions = (
   allQuestions: QuestionInterface[],
-  topicIds: number[],
 ): QuestionInterface[] => {
-  if (!topicIds.length) {
-    throw new Error("Không có topic để tạo đề thi.");
+  /**
+   * =========================
+   * MULTIPLE CHOICE
+   * =========================
+   */
+
+  const multipleChoicePool = allQuestions.filter(isMultipleChoiceQuestion);
+
+  /**
+   * =========================
+   * SITUATION
+   * =========================
+   *
+   * Chỉ lấy situation có
+   * đúng 3 câu hỏi con.
+   */
+
+  const situationPool = allQuestions
+    .filter(isSituationQuestion)
+    .filter(isValidSituationQuestion);
+
+  /**
+   * =========================
+   * FILL IN BLANK
+   * =========================
+   */
+
+  const fillInBlankPool = allQuestions.filter(isFillInBlankQuestion);
+
+  /**
+   * =========================
+   * VALIDATE POOL
+   * =========================
+   */
+
+  if (multipleChoicePool.length < EXAM_MULTIPLE_CHOICE_COUNT) {
+    throw new Error(
+      [
+        "Không đủ câu MULTIPLE_CHOICE.",
+        `Cần: ${EXAM_MULTIPLE_CHOICE_COUNT}.`,
+        `Hiện có: ${multipleChoicePool.length}.`,
+      ].join(" "),
+    );
   }
 
-  const multipleChoiceQuestions = selectQuestionsByType(
-    allQuestions,
-    QuestionType.MULTIPLE_CHOICE,
-    MULTIPLE_CHOICE_COUNT,
-    topicIds,
-  ).map((question) =>
-    shuffleMultipleChoiceOptions(question as MultipleChoiceQuestionInterface),
+  if (situationPool.length < EXAM_SITUATION_COUNT) {
+    throw new Error(
+      [
+        "Không đủ câu SITUATION hợp lệ.",
+        `Cần: ${EXAM_SITUATION_COUNT}.`,
+        `Hiện có: ${situationPool.length}.`,
+        `Mỗi SITUATION phải có đúng ${SITUATION_SUB_QUESTION_COUNT} câu con.`,
+      ].join(" "),
+    );
+  }
+
+  if (fillInBlankPool.length < EXAM_FILL_IN_BLANK_COUNT) {
+    throw new Error(
+      [
+        "Không đủ câu FILL_IN_BLANK.",
+        `Cần: ${EXAM_FILL_IN_BLANK_COUNT}.`,
+        `Hiện có: ${fillInBlankPool.length}.`,
+      ].join(" "),
+    );
+  }
+
+  /**
+   * =========================
+   * RANDOM QUESTIONS
+   * =========================
+   */
+
+  const multipleChoiceQuestions = shuffleArray(multipleChoicePool).slice(
+    0,
+    EXAM_MULTIPLE_CHOICE_COUNT,
   );
 
-  const trueFalseQuestions = selectQuestionsByType(
-    allQuestions,
-    QuestionType.TRUE_FALSE,
-    TRUE_FALSE_COUNT,
-    topicIds,
-  ).map((question) =>
-    shuffleTrueFalseItems(question as TrueFalseQuestionInterface),
+  const situationQuestions = shuffleArray(situationPool).slice(
+    0,
+    EXAM_SITUATION_COUNT,
   );
 
-  const fillInBlankQuestions = selectQuestionsByType(
-    allQuestions,
-    QuestionType.FILL_IN_BLANK,
-    FILL_IN_BLANK_COUNT,
-    topicIds,
+  const fillInBlankQuestions = shuffleArray(fillInBlankPool).slice(
+    0,
+    EXAM_FILL_IN_BLANK_COUNT,
   );
 
-  return shuffleArray([
+  /**
+   * =========================
+   * BUILD EXAM
+   * =========================
+   *
+   * Không shuffle toàn bộ.
+   *
+   * Giữ đúng cấu trúc:
+   *
+   * 1 - 48:
+   * MCQ
+   *
+   * 49 - 54:
+   * 2 Situation × 3 sub questions
+   *
+   * 55 - 60:
+   * Fill In Blank
+   */
+
+  const examQuestions: QuestionInterface[] = [
     ...multipleChoiceQuestions,
-    ...trueFalseQuestions,
+    ...situationQuestions,
     ...fillInBlankQuestions,
-  ]);
+  ];
+
+  /**
+   * =========================
+   * FINAL VALIDATION
+   * =========================
+   */
+
+  if (examQuestions.length !== EXAM_TOTAL_BLOCK_COUNT) {
+    throw new Error(
+      [
+        "Sai số lượng block của đề.",
+        `Expected: ${EXAM_TOTAL_BLOCK_COUNT}.`,
+        `Actual: ${examQuestions.length}.`,
+      ].join(" "),
+    );
+  }
+
+  const totalQuestionCount = getTotalExamQuestionCount(examQuestions);
+
+  if (totalQuestionCount !== EXAM_TOTAL_QUESTION_COUNT) {
+    throw new Error(
+      [
+        "Sai tổng số câu được chấm.",
+        `Expected: ${EXAM_TOTAL_QUESTION_COUNT}.`,
+        `Actual: ${totalQuestionCount}.`,
+      ].join(" "),
+    );
+  }
+
+  return examQuestions;
+};
+
+/**
+ * ========================================
+ * EXAM STATISTICS
+ * ========================================
+ *
+ * Dùng để debug hoặc hiển thị.
+ */
+
+export interface ExamQuestionStatistics {
+  multipleChoiceCount: number;
+  situationCount: number;
+  situationSubQuestionCount: number;
+  fillInBlankCount: number;
+
+  /**
+   * Số block:
+   * 56
+   */
+  blockCount: number;
+
+  /**
+   * Tổng số câu được chấm:
+   * 60
+   */
+  totalQuestionCount: number;
+}
+
+export const getExamQuestionStatistics = (
+  questions: QuestionInterface[],
+): ExamQuestionStatistics => {
+  const multipleChoiceCount = questions.filter(
+    (question) => question.type === QuestionType.MULTIPLE_CHOICE,
+  ).length;
+
+  const situations = questions.filter(isSituationQuestion);
+
+  const situationCount = situations.length;
+
+  const situationSubQuestionCount = situations.reduce(
+    (total, situation) => total + situation.questions.length,
+    0,
+  );
+
+  const fillInBlankCount = questions.filter(
+    (question) => question.type === QuestionType.FILL_IN_BLANK,
+  ).length;
+
+  return {
+    multipleChoiceCount,
+    situationCount,
+    situationSubQuestionCount,
+    fillInBlankCount,
+
+    blockCount: questions.length,
+
+    totalQuestionCount: getTotalExamQuestionCount(questions),
+  };
 };

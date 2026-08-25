@@ -30,7 +30,21 @@ export interface FillInBlankUserAnswer {
   isCorrect: boolean;
 }
 
+export interface SituationQuestionAnswerItem {
+  questionId: string;
+  selectedOptionId: number | null;
+  isChecked: boolean;
+  isCorrect: boolean;
+}
+
+export interface SituationUserAnswer {
+  questionId: string;
+  type: typeof QuestionType.SITUATION;
+  answers: SituationQuestionAnswerItem[];
+}
+
 export type UserAnswer =
   | MultipleChoiceUserAnswer
   | TrueFalseUserAnswer
-  | FillInBlankUserAnswer;
+  | FillInBlankUserAnswer
+  | SituationUserAnswer;

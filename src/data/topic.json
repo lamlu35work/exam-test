@@ -1,26 +1,26 @@
 [
   {
     "id": 1,
-    "name": "Luật giao dịch điện tử"
+    "name": "Hệ thống kiến thức lý luận chung về nhà nước và pháp luật"
   },
   {
     "id": 2,
-    "name": "Nghị quyết số 10-NQ/TW"
+    "name": "Giáo trình lý luận nhà nước và pháp luật"
   },
   {
     "id": 3,
-    "name": "Nghị quyết số 57"
+    "name": "Hiến pháp 2013"
   },
   {
     "id": 4,
-    "name": "Luật chuyển đổi số"
+    "name": "Nghị quyết 66"
   },
   {
-    "id":5,
-    "name": "Luật dữ liệu"
+    "id": 5,
+    "name": "Nghị quyết 27"
   },
   {
     "id": 6,
-    "name": "Luật trí tuệ nhân tạo"
+    "name": "Tình huống thực tế"
   }
 ]
