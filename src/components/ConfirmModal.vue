@@ -198,8 +198,6 @@ const emit = defineEmits<{
   (event: "cancel"): void;
 }>();
 
-const modalRef = ref<HTMLElement | null>(null);
-
 const confirmButtonRef = ref<HTMLButtonElement | null>(null);
 
 const titleId = `confirm-modal-title-${Math.random().toString(36).slice(2, 8)}`;
