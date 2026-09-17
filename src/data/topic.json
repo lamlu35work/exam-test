@@ -1,26 +1,14 @@
 [
   {
     "id": 1,
-    "name": "Hệ thống kiến thức lý luận chung về nhà nước và pháp luật"
+    "name": "lý luận chung về nhà nước và pháp luật"
   },
   {
     "id": 2,
-    "name": "Giáo trình lý luận nhà nước và pháp luật"
-  },
-  {
-    "id": 3,
     "name": "Hiến pháp 2013"
   },
   {
-    "id": 4,
-    "name": "Nghị quyết 66"
-  },
-  {
-    "id": 5,
-    "name": "Nghị quyết 27"
-  },
-  {
     "id": 6,
-    "name": "Tình huống thực tế"
+    "name": "Tình huống thực tiễn"
   }
 ]
